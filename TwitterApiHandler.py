@@ -13,8 +13,6 @@ class Listner(tweepy.StreamListener):
 
 class Twitter:
     def __init__ (self, consumerKey, consumerSecret, accessToken, accessSecret):
-        import tweepy as tweepy
-        import json as json
         self.consumerKey = consumerKey
         self.consumerSecret = consumerSecret
         self.accessToken = accessToken
@@ -25,13 +23,14 @@ class Twitter:
         self.DataBase = DataBase.DataBase()
         self.listner = Listner()
 
-    def search (self, object):
-        self.DataBase.save(str(self.api.search(str(object) if type(object) != list else object)))
+    def search (self, objectName, object):
+        self.DataBase.save(objectName, self.api.search(str(object) if type(object) != list else object))
     
     def stream (self, object):
-        streamer = tweepy.stream(self.auth, self.listner) 
+        streamer = tweepy.stream(self.auth, self.listner)
         self.DataBase.save(streamer.filter(track = str(object) if type(object) != list else object))
 
 
 sample = Twitter('c16icxmBoqqhpZAMFZxlWNxYo', 'cW4Y6PbYfDVe15b6yeTQjWC9Og0kTOgpQt3caIEeLreasIRNeE', '967018015849148417-21nDpxdrdkAubl7NxFOZguy8Wr7o0Dd', 'bfvCreJfsFb8ZjSjPViEGS9KSW13gWlYt4tRZYhg9OMij')
-sample.search('bitcoin')
+sample.search('bitcoin', 'search')
+print(sample.DataBase.read())

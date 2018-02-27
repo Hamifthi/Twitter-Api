@@ -1,12 +1,13 @@
+import pickle
 class DataBase:
     def __init__ (self):
-        self.database = open('Database.json', 'a', encoding = 'utf8')
+        self.database = open('Database.pickle', 'wb')
 
-    def save (self, object):
-        self.database.write(object)
-        self.database.write('\n')
+    def save (self, objectName, object):
+        pickle.dump(dict(objectName = object), self.database)
+        pickle.dump('\n', self.database)
         self.database.close()
 
-    def read (self, object):
-        with open('Database.json', 'r') as database:
-            return database.read(object)
+    def read (self):
+        with open('Database.pickle', 'rb') as self.database:
+            return pickle.load(self.database)
