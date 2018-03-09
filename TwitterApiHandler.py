@@ -28,9 +28,14 @@ class Twitter:
         self.api = tweepy.API(self.auth)
         self.listner = Listner()
 
-    def search (self, object):
+    def serachTimeLine(self, id, count):
+        if count > 200:
+            raise ValueError('max count is 200')
+        print(self.api.user_timeline(id, count = count))
+
+    def searchTweets (self, object):
         dataBase.save(self.api.search(str(object) if type(object) != list else object, lang = 'en'))
     
-    def stream (self, object):
+    def stream (self, object, lang):
         streamer = tweepy.Stream(self.auth, self.listner)
-        streamer.filter(track = str(object) if type(object) != list else object)
+        streamer.filter(track = str(object) if type(object) != list else object, language = lang)
