@@ -1,13 +1,24 @@
-import pickle
-class DataBase:
-    def __init__ (self):
-        self.database = open('Database.pickle', 'rb')
+import datetime
+from mongoengine import *
 
-    def save (self, object):
-        with open('Database.pickle', 'wb') as self.database:
-            pickle.dump(object, self.database)
-            pickle.dump('\n', self.database)
+def __init__ (dataBaseName):
+    connect(dataBaseName)
 
-    def read (self):
-        with open('Database.pickle', 'rb') as self.database:
-            return pickle.load(self.database)
+class rateLimitStatus(Document):
+    data = DictField(required = True)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class TimeLine(Document):
+    data = DictField()
+    name = StringField(required = True)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class Tweets(Document):
+    data = DictField()
+    subject = StringField(required = True)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class StreamObjects(Document):
+    data = FileField()
+    subject = StringField(default = None)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
