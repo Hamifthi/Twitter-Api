@@ -1,20 +1,22 @@
 import DataBase
 import tweepy
 import json
+import datetime
 
 class Listner(tweepy.StreamListener):
 
-        def on_data(self, data):
-            try:
-                data = json.loads(data, encoding = 'UTF_8')
-                dataBase = open('tweetDB.json', 'a', encoding = 'utf8')
-                dataBase.write(data['text'])
-                dataBase.close()
-            except BaseException as error:
-                print(error)
+    def on_data(self, data):
+        try:
+            data = json.loads(data, encoding = 'UTF_8')
+            dataBase = open('tweetDB.json', 'a', encoding = 'utf8')
+            dataBase.write(json.dumps(data))
+            dataBase.write('\n')
+            dataBase.close()
+        except BaseException as error:
+            print(error)
 
-        def on_error(self, status):
-            print(status)
+    def on_error(self, status):
+        print(status)
 
 class Twitter:
     
@@ -48,12 +50,14 @@ class Twitter:
     def stream (self, object):
         streamer = tweepy.Stream(self.auth, self.listner)
         streamer.filter(track = object, languages = ["en"])
+        # DataBase.StreamObjects(data = )
 
     def cursor (self, method, **kwargs):
         items = tweepy.Cursor(method, kwargs).items()
         pages = tweepy.Cursor(method, kwargs).pages()
+        DataBase.CursorObjects({'items' : items, 'pages' : pages}, method = method).save()
         return items, pages
 
     def api (self, method, **kwargs):
+        DataBase.ApiObjects({'data' : self.api.method(**kwargs)}, method = method}).save()
         return self.api.method(**kwargs)
-        DataBase

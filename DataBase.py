@@ -19,6 +19,17 @@ class Tweets(Document):
     time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 class StreamObjects(Document):
-    data = FileField()
+    data = DictField()
     subject = StringField(default = None)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class CursorObjects(Document):
+    items = DictField()
+    pages = DictField()
+    method = StringField(default = None)
+    time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+class ApiObjects(Document):
+    data = DictField()
+    method = StringField(default = None)
     time = DateTimeField(default =  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
