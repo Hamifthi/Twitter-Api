@@ -6,10 +6,11 @@ import datetime
 class Listner(tweepy.StreamListener):
 
     def on_data(self, data):
+
         try:
             data = json.loads(data, encoding = 'UTF_8')
             dataBase = open('tweetDB.json', 'a', encoding = 'utf8')
-            dataBase.write(json.dumps(data))
+            dataBase.write(str([data[key] for key in ['retweet_count', 'created_at', 'text', 'entities']]))
             dataBase.write('\n')
             dataBase.close()
         except BaseException as error:
@@ -35,7 +36,7 @@ class Twitter:
         DataBase.rateLimitStatus(data = {'status' : self.api.rate_limit_status()}).save()
         return self.api.rate_limit_status()
 
-    def serachTimeLine(self, id, count):
+    def searchTimeLine(self, id, count):
         if count > 200:
             raise ValueError('max count is 200')
         DataBase.TimeLine({'data' : self.api.user_timeline(id, count = count)}, name = str(id)).save()
@@ -49,15 +50,4 @@ class Twitter:
     
     def stream (self, object):
         streamer = tweepy.Stream(self.auth, self.listner)
-        streamer.filter(track = object, languages = ["en"])
-        # DataBase.StreamObjects(data = )
-
-    def cursor (self, method, **kwargs):
-        items = tweepy.Cursor(method, kwargs).items()
-        pages = tweepy.Cursor(method, kwargs).pages()
-        DataBase.CursorObjects({'items' : items, 'pages' : pages}, method = method).save()
-        return items, pages
-
-    def api (self, method, **kwargs):
-        DataBase.ApiObjects({'data' : self.api.method(**kwargs)}, method = method}).save()
-        return self.api.method(**kwargs)
+        streamer.filter(track = [object], languages = ["en"])
