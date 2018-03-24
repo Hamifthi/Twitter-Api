@@ -9,6 +9,14 @@ class Listner(tweepy.StreamListener):
 
         try:
             data = json.loads(data, encoding = 'UTF_8')
+            DataBase.connect('TweetDB')
+            streams = DataBase.StreamObjects()
+            streams.data.new_file(encoding = 'UTF_8', type = 'string')
+            streams.data.write("hi")
+            streams.data.close()
+
+        try:
+            data = json.loads(data, encoding = 'UTF_8')
             dataBase = open('tweetDB.json', 'a', encoding = 'utf8')
             dataBase.write(str([data[key] for key in ['retweet_count', 'created_at', 'text', 'entities']]))
             dataBase.write('\n')
