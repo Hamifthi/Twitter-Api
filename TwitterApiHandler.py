@@ -1,5 +1,6 @@
 import DataBase
 import tweepy
+import pandas as pd
 import json
 import datetime
 from textblob import TextBlob
@@ -15,11 +16,12 @@ class Listner(tweepy.StreamListener):
         #     streams.data.new_file(encoding = 'UTF_8', type = 'string')
         #     streams.data.write("hi")
         #     streams.data.close()
+        #     dataBase.write(str(TextBlob(data['text']).sentiment.polarity))
+        #     dataBase.write(str([data[key] for key in ['retweet_count', 'created_at', 'text', 'entities']]))
 
         try:
             data = json.loads(data, encoding = 'UTF_8')
             dataBase = open('tweetDB.txt', 'a', encoding = 'utf8')
-            # dataBase.write(str([data[key] for key in ['retweet_count', 'created_at', 'text', 'entities']]))
             dataBase.write(str(data['text']))
             dataBase.write('\n')
             dataBase.close()
